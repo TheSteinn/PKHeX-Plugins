@@ -238,6 +238,8 @@ namespace PKHeX.Core.AutoMod
                 (ushort)Species.Silvally => SimpleEdits.GetSilvallyHeldItemFromForm(form),
                 (ushort)Species.Genesect => SimpleEdits.GetGenesectHeldItemFromForm(form),
                 (ushort)Species.Giratina => form == 1 ? (generation >= 9 ? 1779 : 112) : null, // Griseous Core / Orb
+                (ushort)Species.Dialga => form == 1 && generation >= 9 ? 1777 : null, // Adamant Crystal
+                (ushort)Species.Palkia => form == 1 && generation >= 9 ? 1778 : null, // Lustrous Globe
                 (ushort)Species.Zacian => form == 1 ? 1103 : null, // Rusted Sword
                 (ushort)Species.Zamazenta => form == 1 ? 1104 : null, // Rusted Shield
                 _ => null
