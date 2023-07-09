@@ -1,0 +1,25 @@
+Gimmighoul  
+Ability: Rattled  
+Level: 75  
+Shiny: Yes  
+Tera Type: Steel
+Modest
+.Version=50
+~=Generation=9
+- Take Down  
+- Shadow Ball  
+- Hex  
+- Power Gem
+
+Gholdengo  
+Ability: Good as Gold
+Level: 100  
+Shiny: Yes  
+Tera Type: Steel
+Modest
+.Version=50
+~=Generation=9
+- Take Down  
+- Shadow Ball  
+- Hex  
+- Power Gem

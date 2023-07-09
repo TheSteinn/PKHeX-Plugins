@@ -118,6 +118,8 @@ namespace AutoModTests
         [InlineData(RoCNTPK6, new[] { OR })]
         [InlineData(RoCNTPK7, new[] { US })]
         [InlineData(RoCVCPK7, new[] { SW, US })]
+        
+        [InlineData(SteinPK9, new[] {SL})]
 
         [InlineData(UnderlevelPK1, new[] { RD, C })]
         [InlineData(UnderlevelPK2, new[] { C })]
@@ -192,6 +194,9 @@ namespace AutoModTests
         private const string RoCNTPK6 = "RoCs-PC Tests/RoC notransfer - pk6.txt";
         private const string RoCNTPK7 = "RoCs-PC Tests/RoC notransfer - pk7.txt";
         private const string RoCVCPK7 = "RoCs-PC Tests/RoC VC - pk7.txt";
+        
+        // Stein test file paths
+        private const string SteinPK9 = "Stein Tests/Stein - pk9.txt";
 
         // Underleveled test file paths
         private const string UnderlevelPK1 = "Underleveled Tests/Underlevel - pk1.txt";
