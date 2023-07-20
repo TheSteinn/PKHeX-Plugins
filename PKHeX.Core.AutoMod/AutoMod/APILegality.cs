@@ -74,7 +74,8 @@ namespace PKHeX.Core.AutoMod
             if (dest.Generation <= 2)
                 template.EXP = 0; // no relearn moves in gen 1/2 so pass level 1 to generator
 
-            var encounters = GetAllEncounters(pk: template, moves: set.Moves, gamelist);
+            // Below line borrowed from santacrab's Home3 branch - empty move array allows finding all possible encounters
+            var encounters = GetAllEncounters(pk: template, moves: Array.Empty<ushort>(), gamelist);
             var criteria = EncounterCriteria.GetCriteria(set, template.PersonalInfo);
             criteria.ForceMinLevelRange = true;
             if (regen.EncounterFilters != null)
@@ -140,6 +141,12 @@ namespace PKHeX.Core.AutoMod
                     BatchEditing.ScreenStrings(b.Instructions);
                     if (!BatchEditing.TryModify(pk, b.Filters, b.Instructions) && b.Filters.Count > 0)
                         continue;
+                }
+                
+                if (pk is IScaledSizeValue sv) //correct - check borrowed from santacrab's Home3 branch
+                {
+                    sv.WeightAbsolute = sv.CalcWeightAbsolute;
+                    sv.HeightAbsolute = sv.CalcHeightAbsolute;
                 }
 
                 if (pk is PK1 pk1 && pk1.TradebackValid())
@@ -902,10 +909,17 @@ namespace PKHeX.Core.AutoMod
                 ulong seed = GetRandomULong();
                 const byte rollCount = 1;
                 const byte undefinedSize = 0;
-                var pi = PersonalTable.SV.GetFormEntry(pk.Species, pk.Form);
-                var param = new GenerateParam9(pk.Species, pi.Gender, enc.FlawlessIVCount, rollCount,
-                    undefinedSize, undefinedSize, undefinedSize, undefinedSize,
-                    enc.Ability, enc.Shiny);
+                var pi = PersonalTable.SV.GetFormEntry(enc.Species, enc.Form);
+                var param = enc switch
+                {
+                    EncounterDist9 dist => new GenerateParam9(pk.Species, pi.Gender, dist.FlawlessIVCount, rollCount,
+                        undefinedSize, undefinedSize, dist.ScaleType, dist.Scale, dist.Ability, dist.Shiny, dist.Nature, dist.IVs),
+                    EncounterMight9 might => new GenerateParam9(pk.Species, pi.Gender, might.FlawlessIVCount, rollCount,
+                        undefinedSize, undefinedSize, might.ScaleType, might.Scale, might.Ability, might.Shiny, might.Nature, might.IVs),
+                    _ => new GenerateParam9(pk.Species, pi.Gender, enc.FlawlessIVCount, rollCount,
+                        undefinedSize, undefinedSize, undefinedSize, undefinedSize,
+                        enc.Ability, enc.Shiny),
+                };
                 enc.TryApply32(pk, seed, param, EncounterCriteria.Unrestricted);
                 if (IsMatchCriteria9(pk, set, compromise))
                     break;

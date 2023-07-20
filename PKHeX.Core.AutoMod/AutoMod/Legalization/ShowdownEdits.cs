@@ -140,7 +140,9 @@ namespace PKHeX.Core.AutoMod
                 }
             }
 
-            pk.SetSuggestedFormArgument(enc.Species);
+            if (pk is IFormArgument)
+                pk.SetSuggestedFormArgument(enc.Species);
+            
             if (evolutionRequired)
                 pk.RefreshAbility(pk.AbilityNumber >> 1);
 
@@ -270,7 +272,7 @@ namespace PKHeX.Core.AutoMod
                 pk.FixMoves();
             }
 
-            if (la.Parsed && !pk.FatefulEncounter && !MoveResult.AllValid(la.Info.Relearn))
+            if (la.Parsed && !pk.FatefulEncounter)
             {
                 // For dexnav. Certain encounters come with "random" relearn moves, and our requested moves might require one of them.
                 Span<ushort> moves = stackalloc ushort[4];
@@ -278,6 +280,9 @@ namespace PKHeX.Core.AutoMod
                 pk.ClearRelearnMoves();
                 pk.SetRelearnMoves(moves);
             }
+            la = new LegalityAnalysis(pk);
+            if (la.Info.Relearn.Any(z => z.Judgement == Severity.Invalid))
+                pk.ClearRelearnMoves();
 
             if (pk is IAwakened)
             {
@@ -348,7 +353,7 @@ namespace PKHeX.Core.AutoMod
                     pk.HeldItem = pk.Form != formg ? 0 : pk.HeldItem;
                     pk.Form = pk.Form != formg ? (byte)0 : formg;
                     break;
-                case Species.Giratina when pk.Form == 1 && (pk.HeldItem != 112 || pk.HeldItem != 1779):
+                case Species.Giratina when pk.Form == 1 && (pk.HeldItem != 112 && pk.HeldItem != 1779):
                     pk.HeldItem = pk.Context >= EntityContext.Gen9 ? 1779 : 112;
                     break;
                 case Species.Dialga when pk.Form == 1 && pk.HeldItem != 1777:
