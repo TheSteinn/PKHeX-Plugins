@@ -140,6 +140,7 @@ namespace PKHeX.Core.AutoMod
                 }
             }
 
+            // Only set form if the pk is able to have forms?
             if (pk is IFormArgument)
                 pk.SetSuggestedFormArgument(enc.Species);
             
